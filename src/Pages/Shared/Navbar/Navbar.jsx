@@ -76,9 +76,11 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">{menuItems}</ul>
       </div>
       <div className="navbar-end">
-        <a className="text-white bg-indigo-700 px-3 py-1 rounded font-bold mx-3">
-          {user?.displayName}
-        </a>
+        {user && (
+          <a className="text-white bg-indigo-700 px-3 py-1 rounded font-bold mx-3">
+            {user?.displayName}
+          </a>
+        )}
         <Link to="/dashboard/myCart">
           <button className="btn">
             <FaCartArrowDown />

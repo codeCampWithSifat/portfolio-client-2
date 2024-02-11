@@ -11,13 +11,14 @@ import { FaAd, FaHome, FaShoppingBag, FaShoppingCart } from "react-icons/fa";
 import { MdContactMail, MdOutlineMenu } from "react-icons/md";
 import useCart from "../hooks/useCart";
 import useMenu from "../hooks/useMenu";
+import useAdmin from "../hooks/useAdmin";
 
 const Dashboard = () => {
   const [cart] = useCart();
   const [menu] = useMenu();
 
   // TODO: GET isAdmin Value From The Database
-  const isAdmin = true;
+  const [isAdmin] = useAdmin();
 
   return (
     <div className="drawer lg:drawer-open">

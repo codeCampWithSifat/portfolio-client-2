@@ -12,6 +12,20 @@ const AllUsers = () => {
     },
   });
 
+  // raw set the header
+  // const token = localStorage.getItem("access-token");
+  // const { data: users = [], refetch } = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/users", {
+  //       headers: {
+  //         authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     return res.data;
+  //   },
+  // });
+
   const handleMakeAdmin = (user) => {
     Swal.fire({
       title: "Are you sure?",
@@ -38,6 +52,7 @@ const AllUsers = () => {
   };
 
   const handleDeleteUser = (user) => {
+    console.log(user);
     Swal.fire({
       title: "Are you sure?",
       text: ` Are You Sure You Want To Delete ${user.name}`,
@@ -48,14 +63,20 @@ const AllUsers = () => {
       confirmButtonText: `Yes Delete ${user.name}`,
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: `Admin ${user.name} Deleted Successfully`,
-          icon: "success",
+        axiosSecure.delete(`/users/${user._id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: ` ${user.name} Deleted Successfully`,
+              icon: "success",
+            });
+          }
         });
       }
     });
   };
+
   return (
     <div>
       <div className="overflow-x-auto max-w-screen-lg mx-auto">
