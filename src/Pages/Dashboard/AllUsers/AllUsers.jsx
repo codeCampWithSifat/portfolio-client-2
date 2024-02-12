@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet-async";
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -79,6 +80,9 @@ const AllUsers = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>All || Users</title>
+      </Helmet>
       <div className="overflow-x-auto max-w-screen-lg mx-auto">
         <div className="text-center mt-10">
           <h2 className="text-indigo-800 text-lg"> AllUsers {users.length}</h2>
@@ -104,7 +108,9 @@ const AllUsers = () => {
 
                 <td>
                   {user.role === "admin" ? (
-                    <button className="btn btn-ghost btn-sm ">Admin</button>
+                    <button className="btn btn-ghost btn-sm text-indigo-800 font-bold">
+                      Admin
+                    </button>
                   ) : (
                     <button
                       onClick={() => handleMakeAdmin(user)}

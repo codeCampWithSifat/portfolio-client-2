@@ -90,7 +90,7 @@ const Dashboard = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard/cart">
+                <Link to="/dashboard/myCart">
                   <FaShoppingCart></FaShoppingCart>
                   My Cart ({cart.length})
                 </Link>

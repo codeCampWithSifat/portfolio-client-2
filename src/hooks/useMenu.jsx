@@ -5,7 +5,7 @@ const useMenu = () => {
   const axiosPublic = useAxiosPublic();
   const {
     data: menu = [],
-    isLoading,
+    isLoading: menuLoading,
     refetch,
   } = useQuery({
     queryKey: ["menu"],
@@ -14,7 +14,7 @@ const useMenu = () => {
       return res.data;
     },
   });
-  return [menu, isLoading, refetch];
+  return [menu, menuLoading, refetch];
 };
 
 export default useMenu;
