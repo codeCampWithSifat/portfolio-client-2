@@ -125,7 +125,7 @@ const Dashboard = () => {
             </Link>
           </li>
           <li>
-            <Link to="/order/salad">
+            <Link to="/order">
               {" "}
               <FaShoppingBag />
               Shop
