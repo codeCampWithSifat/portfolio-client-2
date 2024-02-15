@@ -1,14 +1,47 @@
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import SectionTitle from "../../../Components/SectionTitle";
-import useMenu from "../../../hooks/useMenu";
+// import useMenu from "../../../hooks/useMenu";
 import useAuth from "../../../hooks/useAuth";
 import LoadingButton from "../../../Components/LoadingButton";
 import { Helmet } from "react-helmet-async";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "../../../hooks/useAxiosPublic";
+import "./ManageItems.css";
+import { useState } from "react";
+
+/*
+ * DONE : Get The Total Number of Items
+ * DONE : Number of Items per page dynamic
+ * DONE : Get the current page number
+ */
 
 const ManageItems = () => {
-  const [menu, menuLoading, refetch] = useMenu();
+  // const [menu, menuLoading, refetch] = useMenu();
+  const axiosPublic = useAxiosPublic();
+  const { count } = useLoaderData();
+
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const numberOfPages = Math.ceil(count / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pages = [...Array(numberOfPages).keys()];
+
+  const {
+    data: menu = [],
+    isloading: menuLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["menuPagination", currentPage, itemsPerPage],
+    queryFn: async () => {
+      const res = await axiosPublic.get(
+        `/menuPagination?page=${currentPage}&size=${itemsPerPage}`
+      );
+      return res.data;
+    },
+    placeholderData: keepPreviousData,
+  });
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
@@ -28,8 +61,8 @@ const ManageItems = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure.delete(`/menu/${item._id}`).then((res) => {
-          refetch();
           if (res.data.deletedCount > 0) {
+            refetch();
             Swal.fire({
               title: "Deleted!",
               text: "Menu Item has been deleted.",
@@ -39,6 +72,25 @@ const ManageItems = () => {
         });
       }
     });
+  };
+
+  const handleItemPerPage = (e) => {
+    // console.log(e.target.value);
+    const value = Number(e.target.value);
+    setItemsPerPage(value);
+    setCurrentPage(0);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
   };
   return (
     <div>
@@ -98,6 +150,45 @@ const ManageItems = () => {
               ))}
             </tbody>
           </table>
+
+          <div className="text-center pagination my-10">
+            <p className="m-4">Current Page : {currentPage + 1}</p>
+            <button
+              onClick={handlePreviousPage}
+              className="btn btn-active btn-ghost btn-sm"
+            >
+              Prev
+            </button>
+            {pages.map((page) => (
+              <button
+                onClick={() => setCurrentPage(page)}
+                className={
+                  currentPage === page
+                    ? `btn btn-sm selected text-white`
+                    : `btn btn-sm btn-primary`
+                }
+                key={page}
+              >
+                {page + 1}
+              </button>
+            ))}
+            <button
+              onClick={handleNextPage}
+              className="btn btn-active btn-ghost btn-sm"
+            >
+              Next
+            </button>
+            <select
+              value={itemsPerPage}
+              className="select select-success select-sm "
+              onChange={handleItemPerPage}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+              <option value={20}>20</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

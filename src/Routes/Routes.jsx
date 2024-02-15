@@ -103,6 +103,7 @@ export const router = createBrowserRouter([
             <ManageItems />
           </AdminRoute>
         ),
+        loader: () => fetch(`https://protfolio-server-2.vercel.app/menuCount`),
       },
       {
         path: "updateItem/:id",
