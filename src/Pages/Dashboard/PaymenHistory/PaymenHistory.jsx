@@ -10,7 +10,6 @@ const PaymenHistory = () => {
     queryKey: ["payments", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/payments/${user?.email}`);
-      console.log(res);
       return res.data;
     },
   });
